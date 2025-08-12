@@ -39,4 +39,13 @@ const protect = async (req, res, next) => {
 };
 
 
+
+const adminProtect = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "دسترسی غیرمجاز" });
+  }
+};
+
 module.exports = { protect, adminProtect };
