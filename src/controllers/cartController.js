@@ -20,14 +20,23 @@ exports.addToCart = async (req, res) => {
     }
 };
 
+
 exports.getCart = async (req, res) => {
     try {
-        const cart = await cartService.getCart(req.user._id);
+        let cart;
+        if (req.user) {
+            cart = await cartService.getCart(req.user._id);
+        } else if (req.query.guestId) {
+            cart = await cartService.getCartForGuest(req.query.guestId);
+        } else {
+            return res.status(400).json({ message: "شناسه مهمان یا کاربر لازم است" });
+        }
         res.json(cart);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.removeFromCart = async (req, res) => {
     try {

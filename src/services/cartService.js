@@ -23,23 +23,11 @@ exports.addToCart = async (userId, productId, quantity) => {
         cart = new Cart({ user: userId, items: [] });
     }
 
-    const existingItem = cart.items.find(
-        (item) =>
-            item.product.toString() === productId &&
-            (!item.variant || !variant || (
-                item.variant.color === variant.color &&
-                item.variant.size === variant.size
-            ))
-    );
-
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
         cart.items.push({
             product: productId,
-            variant: variant
-                ? { color: variant.color, size: variant.size, stock: variant.stock }
-                : undefined,
             quantity,
         });
     }
@@ -65,23 +53,11 @@ exports.addToCartForGuest = async (guestId, productId, quantity) => {
         cart = new Cart({ guestId, items: [] });
     }
 
-    const existingItem = cart.items.find(
-        (item) =>
-            item.product.toString() === productId &&
-            (!item.variant || !variant || (
-                item.variant.color === variant.color &&
-                item.variant.size === variant.size
-            ))
-    );
-
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
         cart.items.push({
             product: productId,
-            variant: variant
-                ? { color: variant.color, size: variant.size, stock: variant.stock }
-                : undefined,
             quantity,
         });
     }
@@ -95,6 +71,12 @@ exports.getCart = async (userId) => {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
     return cart || { items: [] };
 };
+
+exports.getCartForGuest = async (guestId) => {
+    const cart = await Cart.findOne({ guestId }).populate("items.product");
+    return cart || { items: [] };
+};
+
 
 exports.removeFromCart = async (userId, productId) => {
     const cart = await Cart.findOne({ user: userId });
