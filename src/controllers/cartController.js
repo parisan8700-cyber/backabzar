@@ -2,7 +2,18 @@ const cartService = require("../services/cartService");
 
 exports.addToCart = async (req, res) => {
     try {
-        const cart = await cartService.addToCart(req.user._id, req.body.productId, req.body.quantity);
+        const { productId, quantity, guestId } = req.body;
+
+        let cart;
+        if (req.user) {
+          cart = await cartService.addToCart(req.user._id, productId, quantity);
+        } else if (guestId) {
+          cart = await cartService.addToCartForGuest(guestId, productId, quantity);
+        } else {
+          return res.status(400).json({ message: "شناسه مهمان یا کاربر لازم است" });
+        }
+
+
         res.status(200).json({ message: "محصول اضافه شد", cart });
     } catch (error) {
         res.status(400).json({ message: error.message });
