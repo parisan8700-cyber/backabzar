@@ -2,42 +2,7 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
 
-exports.addToCart = async (userId, productId, quantity) => {
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-        throw new Error("شناسه محصول معتبر نیست");
-    }
-
-    const product = await Product.findById(productId);
-    if (!product) {
-        throw new Error("محصول یافت نشد");
-    }
-
-    const variant = product.variants?.[0];
-
-    if (variant && variant.stock < quantity) {
-        throw new Error("موجودی کافی نیست");
-    }
-
-    let cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-        cart = new Cart({ user: userId, items: [] });
-    }
-
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.items.push({
-            product: productId,
-            quantity,
-        });
-    }
-
-    await cart.save();
-    return cart;
-};
-
-
-exports.addToCartForGuest = async (guestId, productId, quantity) => {
+exports.addToCart = async ({ userId, guestId, productId, quantity }) => {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         throw new Error("شناسه محصول معتبر نیست");
     }
@@ -45,26 +10,35 @@ exports.addToCartForGuest = async (guestId, productId, quantity) => {
     const product = await Product.findById(productId);
     if (!product) throw new Error("محصول یافت نشد");
 
-    const variant = product.variants?.[0];
-    if (variant && variant.stock < quantity) throw new Error("موجودی کافی نیست");
+    // پشتیبانی هم از stock مستقیم و هم stock داخل variants
+    const stock = product.variants?.[0]?.stock ?? product.stock;
+    if (quantity <= 0) throw new Error("مقدار محصول باید بیشتر از صفر باشد");
 
-    let cart = await Cart.findOne({ guestId });
+    const query = userId ? { user: userId } : { guestId };
+    let cart = await Cart.findOne(query);
     if (!cart) {
-        cart = new Cart({ guestId, items: [] });
+        cart = new Cart({ ...query, items: [] });
+    }
+
+    let existingItem = cart.items.find(
+        (item) => item.product.toString() === productId.toString()
+    );
+
+    const totalQuantity = (existingItem?.quantity || 0) + quantity;
+    if (stock !== undefined && totalQuantity > stock) {
+        throw new Error("مقدار درخواستی بیشتر از موجودی انبار است");
     }
 
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
-        cart.items.push({
-            product: productId,
-            quantity,
-        });
+        cart.items.push({ product: productId, quantity });
     }
 
     await cart.save();
     return cart;
 };
+
 
 
 exports.getCart = async (userId) => {
