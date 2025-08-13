@@ -10,16 +10,15 @@ exports.addToCart = async ({ userId, guestId, productId, quantity }) => {
     const product = await Product.findById(productId);
     if (!product) throw new Error("محصول یافت نشد");
 
-    // پشتیبانی هم از stock مستقیم و هم stock داخل variants
     const stock = product.stock;
     if (quantity <= 0) throw new Error("مقدار محصول باید بیشتر از صفر باشد");
 
+    // پیدا کردن سبد
     const query = userId ? { user: userId } : { guestId };
     let cart = await Cart.findOne(query);
-    if (!cart) {
-        cart = new Cart({ ...query, items: [] });
-    }
+    if (!cart) cart = new Cart({ ...query, items: [] });
 
+    // آیتم موجود
     let existingItem = cart.items.find(
         (item) => item.product.toString() === productId.toString()
     );
@@ -38,7 +37,6 @@ exports.addToCart = async ({ userId, guestId, productId, quantity }) => {
     await cart.save();
     return cart;
 };
-
 
 
 exports.getCart = async (userId) => {
