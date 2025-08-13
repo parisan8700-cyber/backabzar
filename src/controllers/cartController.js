@@ -1,26 +1,5 @@
 const cartService = require("../services/cartService");
 
-exports.addToCart = async (req, res) => {
-    try {
-        const { productId, quantity, guestId } = req.body;
-
-        if (!req.user && !guestId) {
-            return res.status(400).json({ message: "شناسه مهمان یا کاربر لازم است" });
-        }
-
-        const cart = await cartService.addToCart({
-            userId: req.user?._id,
-            guestId,
-            productId,
-            quantity
-        });
-
-        res.status(200).json({ message: "محصول اضافه شد", cart });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
 
 exports.getCart = async (req, res) => {
     try {
@@ -39,9 +18,36 @@ exports.getCart = async (req, res) => {
 };
 
 
+exports.addToCart = async (req, res) => {
+    try {
+        const { productId, quantity = 1, guestId } = req.body;
+
+        if (!req.user && !guestId) {
+            return res.status(400).json({ message: "شناسه مهمان یا کاربر لازم است" });
+        }
+
+        const cart = await cartService.addToCart({
+            userId: req.user?._id,
+            guestId,
+            productId,
+            quantity
+        });
+
+        res.status(200).json({ message: "محصول اضافه شد", cart });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 exports.removeFromCart = async (req, res) => {
     try {
-        const cart = await cartService.removeFromCart(req.user._id, req.params.productId);
+        const guestId = req.query.guestId; // مهمان می‌تونه حذف کنه
+        const cart = await cartService.removeFromCart({
+            userId: req.user?._id,
+            guestId,
+            productId: req.params.productId
+        });
+
         res.status(200).json({ message: "محصول حذف شد", cart });
     } catch (error) {
         res.status(500).json({ message: error.message });
