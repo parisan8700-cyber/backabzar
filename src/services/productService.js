@@ -4,24 +4,6 @@ const slugify = require("slugify");
 exports.getAllProducts = async (query) => {
     const filters = {};
 
-    if (query.color) {
-        filters["variants.color"] = { $in: query.color.split(",") };
-    }
-
-    if (query.size) {
-        filters["variants.size"] = { $in: query.size.split(",") };
-    }
-
-    if (query.minPrice || query.maxPrice) {
-        filters["variants.price"] = {};
-        if (query.minPrice) {
-            filters["variants.price"].$gte = Number(query.minPrice);
-        }
-        if (query.maxPrice) {
-            filters["variants.price"].$lte = Number(query.maxPrice);
-        }
-    }
-
     const products = await Product.find(filters);
     return products;
 };
