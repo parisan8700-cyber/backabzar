@@ -11,7 +11,7 @@ exports.addToCart = async ({ userId, guestId, productId, quantity }) => {
     if (!product) throw new Error("محصول یافت نشد");
 
     // پشتیبانی هم از stock مستقیم و هم stock داخل variants
-    const stock = product.variants?.[0]?.stock ?? product.stock;
+    const stock = product.stock;
     if (quantity <= 0) throw new Error("مقدار محصول باید بیشتر از صفر باشد");
 
     const query = userId ? { user: userId } : { guestId };
