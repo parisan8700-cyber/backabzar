@@ -39,6 +39,27 @@ exports.addToCart = async (req, res) => {
     }
 };
 
+exports.addInstallmentToCart = async (req, res) => {
+    try {
+        const { productId, quantity = 1, guestId } = req.body;
+
+        if (!req.user && !guestId) {
+            return res.status(400).json({ message: "شناسه مهمان یا کاربر لازم است" });
+        }
+
+        const cart = await cartService.addInstallmentItem({
+            userId: req.user?._id,
+            guestId,
+            productId,
+            quantity
+        });
+
+        res.status(200).json({ message: "محصول اقساطی اضافه شد", cart });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 exports.removeFromCart = async (req, res) => {
     try {
         const guestId = req.query.guestId; // مهمان می‌تونه حذف کنه
