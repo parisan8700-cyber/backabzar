@@ -13,8 +13,28 @@ exports.getProductById = async (id) => {
     return product;
 };
 
-exports.getProductsByCategory = async (category) => {
-    const products = await Product.find({ categories: category });
+// exports.getProductsByCategory = async (category) => {
+//     const products = await Product.find({ categories: category });
+//     return products;
+// };
+
+exports.getProductsByCategory = async (main, sub) => {
+
+    let query = {};
+
+    if (main && sub) {
+        query = {
+            categories: {
+                $elemMatch: { main, sub }
+            }
+        };
+    } else if (main) {
+        query = {
+            "categories.main": main
+        };
+    }
+
+    const products = await Product.find(query);
     return products;
 };
 

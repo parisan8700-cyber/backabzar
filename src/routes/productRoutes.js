@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.get("/", getAllProducts);
 router.get("/search", searchProducts);
-router.get("/category/:category", getProductsByCategory);
+router.get("/category/:main/:sub?", getProductsByCategory);
 router.get("/id/:id", getProductById);
 router.get("/:slug", getProductBySlug);
 router.put("/:id", updateProduct);

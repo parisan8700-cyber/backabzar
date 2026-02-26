@@ -19,12 +19,24 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+// exports.getProductsByCategory = async (req, res) => {
+//   try {
+//     const products = await productService.getProductsByCategory(req.params.category);
+//     res.json(products);
+//   } catch (error) {
+//     res.status(500).json({ message: "خطا در دریافت محصولات بر اساس دسته‌بندی" });
+//   }
+// };
+
 exports.getProductsByCategory = async (req, res) => {
   try {
-    const products = await productService.getProductsByCategory(req.params.category);
+    const { main, sub } = req.params;
+    const products = await productService.getProductsByCategory(main, sub);
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: "خطا در دریافت محصولات بر اساس دسته‌بندی" });
+    res.status(500).json({
+      message: "خطا در دریافت محصولات بر اساس دسته‌بندی"
+    });
   }
 };
 

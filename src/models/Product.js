@@ -8,7 +8,12 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, min: 0 },
   description: { type: String, required: false },
   feature: { type: Array, required: false },
-  categories: { type: [String], required: true },
+  categories: [
+    {
+      main: { type: String, required: true },  // دسته اصلی
+      sub: { type: String }
+    }
+  ],
   brand: String,
   images: [String],
   slug: { type: String, unique: true },
