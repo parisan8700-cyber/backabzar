@@ -1,13 +1,13 @@
-const { createZarinpalPayment } = require("../services/paymentService");
+const { createZibalPayment } = require("../services/paymentService");
 
 exports.createPayment = async (req, res) => {
-    const { amount, description } = req.body;
+    const { amount, description, orderId } = req.body;
 
     try {
-        const result = await createZarinpalPayment(amount, description);
+        const result = await createZibalPayment(amount, description, orderId);
 
         if (result.success) {
-            res.json({ url: result.url });
+            res.json({ url: result.url, orderId });
         } else {
             res.status(400).json({
                 error: "درخواست ناموفق",
@@ -16,9 +16,9 @@ exports.createPayment = async (req, res) => {
             });
         }
     } catch (err) {
-        console.error("❌ Zarinpal Error:", err.message);
+        console.error("❌ Zibal Error:", err.message);
         res.status(500).json({
-            error: "خطا در ارتباط با زرین‌پال",
+            error: "خطا در ارتباط با زیبال",
             detail: err.message,
         });
     }

@@ -1,41 +1,38 @@
 const axios = require("axios");
 
-exports.createZarinpalPayment = async (amount, description) => {
+exports.createZibalPayment = async (amount, description) => {
     const isDev = process.env.NODE_ENV !== "production";
     const callback_url = isDev
-        ? "http://localhost:3000/basket/success"
-        : "https://research-pied.vercel.app/basket/success";
+    ? `http://localhost:3000/basket/success?orderId=${orderId}`
+    : `https://abzar-delta.vercel.app/basket/success?orderId=${orderId}`;
 
     const params = {
-        merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+        merchant: process.env.ZIBAL_MERCHANT,
         amount,
-        callback_url,
+        callbackUrl: callback_url,
         description,
+        orderId,
     };
 
-    const response = await axios.post(
-        "https://sandbox.zarinpal.com/pg/v4/payment/request.json",
-        params,
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
+    const response = await axios.post("https://gateway.zibal.ir/v1/request", params, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
     const { data } = response;
 
-    if (data.data.code === 100) {
+    if (data.result === 100) {
         return {
             success: true,
-            url: `https://sandbox.zarinpal.com/pg/StartPay/${data.data.authority}`,
+            url: `https://gateway.zibal.ir/start/${data.trackId}`,
         };
     } else {
         return {
             success: false,
             error: {
-                code: data.data.code,
-                message: data.data.message,
+                code: data.result,
+                message: data.message,
             },
         };
     }

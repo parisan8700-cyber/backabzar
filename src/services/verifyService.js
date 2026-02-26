@@ -1,12 +1,11 @@
 const axios = require("axios");
 
-exports.verifyPayment = async (authority, amount) => {
+exports.verifyPayment = async (trackId) => {
     const response = await axios.post(
-        "https://sandbox.zarinpal.com/pg/v4/payment/verify.json",
+        "https://gateway.zibal.ir/v1/verify",
         {
-            merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-            amount,
-            authority,
+            merchant: process.env.ZIBAL_MERCHANT,
+            trackId,
         },
         {
             headers: { "Content-Type": "application/json" },
