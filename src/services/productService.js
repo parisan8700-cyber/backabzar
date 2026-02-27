@@ -5,7 +5,9 @@ const slugify = require("slugify");
 exports.getAllProducts = async (query) => {
     const filters = {};
 
-    const products = await Product.find(filters);
+    const products = await Product.find(filters)
+        .populate("categories", "name");
+
     return products;
 };
 
