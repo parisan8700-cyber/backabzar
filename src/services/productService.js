@@ -6,9 +6,7 @@ exports.getAllProducts = async (query) => {
     const filters = {};
 
     const products = await Product.find(filters)
-        .populate("categories");
-
-    console.log("AFTER POPULATE:", products[0]);
+        .populate("categories", "name parent");
 
     return products;
 };
