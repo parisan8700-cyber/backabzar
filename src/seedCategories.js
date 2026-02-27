@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Category = require("./models/Category"); // مسیر درست به مدلت
+const Category = require("./models/Category");
 
-require("dotenv").config(); // اگر از dotenv استفاده می‌کنی
+require("dotenv").config();
 
 // وصل شدن به دیتابیس
 mongoose.connect(process.env.MONGO_URI, {
@@ -43,6 +43,18 @@ const categories = [
         ]
     },
     {
+        name: "تعمیرگاهی",
+        slug: "tamirgahi",
+        children: [
+            { name: "آپارات و پنچر گیری", slug: "aparart" },
+            { name: "ابزار خمکاری", slug: "khomkari" },
+            { name: "ابزار صاقکاری", slug: "saqkari" },
+            { name: "موتور برق", slug: "motor-bargh" },
+            { name: "متعلقات دستی و گاراژی", slug: "garage-tools" },
+            { name: "جعبه بکس و ست بکس", slug: "bax-set" },
+        ]
+    },
+    {
         name: "بادی",
         slug: "badi",
         children: [
@@ -57,6 +69,17 @@ const categories = [
             { name: "پمپ وکیوم", slug: "vacuum-pump" },
             { name: "پولیش", slug: "polish" },
             { name: "جغجغه", slug: "ratchet" },
+        ]
+    },
+    {
+        name: "آبرسانی",
+        slug: "abresani",
+        children: [
+            { name: "لوله و اتصالات", slug: "pipes" },
+            { name: "پمپ آب", slug: "water-pump" },
+            { name: "اتو لوله", slug: "pipe-iron" },
+            { name: "پیستوله", slug: "pistool" },
+            { name: "متعلقات تاسیسات", slug: "plumbing-tools" },
         ]
     },
     {
@@ -80,30 +103,6 @@ const categories = [
         ]
     },
     {
-        name: "تعمیرگاهی",
-        slug: "tamirgahi",
-        children: [
-            { name: "آپارات و پنچر گیری", slug: "aparart" },
-            { name: "ابزار خمکاری", slug: "khomkari" },
-            { name: "ابزار صاقکاری", slug: "saqkari" },
-            { name: "موتور برق", slug: "motor-bargh" },
-            { name: "متعلقات دستی و گاراژی", slug: "garage-tools" },
-            { name: "جعبه بکس و ست بکس", slug: "bax-set" },
-        ]
-    },
-        {
-        name: "آبرسانی",
-        slug: "abresani",
-        children: [
-            { name: "لوله و اتصالات", slug: "pipes" },
-            { name: "پمپ آب", slug: "water-pump" },
-            { name: "اتو لوله", slug: "pipe-iron" },
-            { name: "پیستوله", slug: "pistool" },
-            { name: "سنباده", slug: "sandpaper" },
-            { name: "متعلقات تاسیسات", slug: "plumbing-tools" },
-        ]
-    },
-    {
         name: "کشاورزی",
         slug: "keshavarzi",
         children: [
@@ -116,7 +115,92 @@ const categories = [
             { name: "شمشاد زن", slug: "hedge-trimmer" },
         ]
     },
-    // میتونی بقیه دسته‌ها رو هم به همین شکل اضافه کنی
+    {
+        name: "قفل و یراق آلات",
+        slug: "ghofl-va-yaragh",
+        children: [
+            { name: "جک آرام بند", slug: "jack-aramband" },
+            { name: "دستگیره", slug: "dastgire" },
+            { name: "ریل درب کشویی", slug: "rail-door" },
+            { name: "سیلندر قفل", slug: "cylinder-lock" },
+            { name: "قفل آویز", slug: "padlock" },
+            { name: "قفل درب", slug: "door-lock" },
+            { name: "قفل کتابی", slug: "book-lock" },
+            { name: "لولا", slug: "hinge" },
+            { name: "قرقره درب لیلی", slug: "pulley" },
+        ]
+    },
+    {
+        name: "رنگ",
+        slug: "rang",
+        children: [
+            { name: "اسپری رنگ", slug: "spray-paint" },
+            { name: "پاک کننده نانو", slug: "nano-cleaner" },
+            { name: "کاردک و لیسه", slug: "scraper" },
+        ]
+    },
+    {
+        name: "جوش-برش",
+        slug: "joosh-borosh",
+        children: [
+            { name: "دستگاه جوش", slug: "welding-machine" },
+            { name: "الکترود جوشکاری", slug: "welding-electrode" },
+            { name: "اینورتر برش پلاسما", slug: "plasma-cutter" },
+            { name: "برش ریلی", slug: "rail-cut" },
+            { name: "تنگستن", slug: "tungsten" },
+            { name: "متعلغات ابزارها جوش", slug: "welding-tools" },
+        ]
+    },
+    {
+        name: "تراشکاری",
+        slug: "tarashkari",
+        children: [
+            { name: "دستگاه تراش", slug: "lathe-machine" },
+            { name: "شنک", slug: "shank" },
+            { name: "فرز فرم", slug: "form-mill" },
+            { name: "فشنگی", slug: "feshangi" },
+            { name: "قلاویز", slug: "tap-die" },
+            { name: "متعلقات ابزار تراش", slug: "lathe-tools" },
+        ]
+    },
+    {
+        name: "صفحه سنگ فرز",
+        slug: "safhe-sang-farz",
+        children: [
+            { name: "پوست بره", slug: "sheepskin" },
+            { name: "سنباده", slug: "sandpaper" },
+            { name: "سنگ سنباده", slug: "grinding-stone" },
+            { name: "صفحه سنگ فرز", slug: "grinding-wheel" },
+            { name: "فرچه سیمی", slug: "wire-brush" },
+        ]
+    },
+    {
+        name: "ایمنی",
+        slug: "imeni",
+        children: [
+            { name: "جعبه کمک های اولیه", slug: "first-aid-kit" },
+            { name: "چراغ پیشانی", slug: "headlamp" },
+            { name: "چراغ قوه", slug: "flashlight" },
+            { name: "دستکش کار", slug: "work-gloves" },
+            { name: "شیلد صورت", slug: "face-shield" },
+            { name: "عینک ایمنی", slug: "safety-glasses" },
+            { name: "کلاه ایمنی", slug: "safety-helmet" },
+            { name: "ماسک تنفسی", slug: "respirator" },
+            { name: "ماسک جوشکاری", slug: "welding-mask" },
+        ]
+    },
+    {
+        name: "جرثقیل-لیفتینگ",
+        slug: "jeraghil-lifting",
+        children: [
+            { name: "اسلب گیر", slug: "slab-grip" },
+            { name: "بالانسر", slug: "balancer" },
+            { name: "پولفیت", slug: "pulley-fit" },
+            { name: "جک پالت", slug: "pallet-jack" },
+            { name: "ریل جرثقیل", slug: "crane-rail" },
+            { name: "لیفت مگنت", slug: "lift-magnet" },
+        ]
+    },
     {
         name: "جدید",
         slug: "jadid",

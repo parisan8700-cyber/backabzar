@@ -24,10 +24,6 @@ exports.getProductById = async (id) => {
     return product;
 };
 
-// exports.getProductsByCategory = async (category) => {
-//     const products = await Product.find({ categories: category });
-//     return products;
-// };
 
 exports.getProductsByCategory = async (mainSlug, subSlug) => {
     const mainCategory = await Category.findOne({ slug: mainSlug });
