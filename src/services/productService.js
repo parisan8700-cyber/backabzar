@@ -6,10 +6,18 @@ exports.getAllProducts = async (query) => {
     const filters = {};
 
     const products = await Product.find(filters)
-        .populate("categories", "name parent");
+        .populate({
+            path: "categories",
+            select: "name parent",
+            populate: {
+                path: "parent",
+                select: "name"
+            }
+        });
 
     return products;
 };
+
 
 exports.getProductById = async (id) => {
     const product = await Product.findById(id);
