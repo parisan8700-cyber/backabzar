@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const categories = [
     {
-        name: "برقی و شارژی",
+        name: "ابزار های برقی و شارژی",
         slug: "barghi-va-sharji",
         children: [
             { name: "اره", slug: "are" },
@@ -28,7 +28,7 @@ const categories = [
         ]
     },
     {
-        name: "ابزار دستی",
+        name: "ابزار های دستی",
         slug: "abzar-dasti",
         children: [
             { name: "ابزارهای چندکاره", slug: "multi-tool" },
@@ -43,7 +43,7 @@ const categories = [
         ]
     },
     {
-        name: "تعمیرگاهی",
+        name: "ابزار های تعمیرگاهی",
         slug: "tamirgahi",
         children: [
             { name: "آپارات و پنچر گیری", slug: "aparart" },
@@ -55,7 +55,7 @@ const categories = [
         ]
     },
     {
-        name: "بادی",
+        name: "ابزار های بادی",
         slug: "badi",
         children: [
             { name: "کمپرسور", slug: "compressor" },
@@ -72,7 +72,7 @@ const categories = [
         ]
     },
     {
-        name: "آبرسانی",
+        name: " ابزار های آبرسانی",
         slug: "abresani",
         children: [
             { name: "لوله و اتصالات", slug: "pipes" },
@@ -83,7 +83,7 @@ const categories = [
         ]
     },
     {
-        name: "اندازه گیری",
+        name: "ابزار های اندازه گیری",
         slug: "andaze-giri",
         children: [
             { name: "بادسنج", slug: "anemometer" },
@@ -103,7 +103,7 @@ const categories = [
         ]
     },
     {
-        name: "کشاورزی",
+        name: "ابزار های کشاورزی",
         slug: "keshavarzi",
         children: [
             { name: "آبپاش", slug: "sprinkler" },
@@ -130,18 +130,18 @@ const categories = [
             { name: "قرقره درب لیلی", slug: "pulley" },
         ]
     },
+    // {
+    //     name: "رنگ",
+    //     slug: "rang",
+    //     children: [
+    //         { name: "اسپری رنگ", slug: "spray-paint" },
+    //         { name: "پاک کننده نانو", slug: "nano-cleaner" },
+    //         { name: "کاردک و لیسه", slug: "scraper" },
+    //     ]
+    // },
     {
-        name: "رنگ",
-        slug: "rang",
-        children: [
-            { name: "اسپری رنگ", slug: "spray-paint" },
-            { name: "پاک کننده نانو", slug: "nano-cleaner" },
-            { name: "کاردک و لیسه", slug: "scraper" },
-        ]
-    },
-    {
-        name: "جوش-برش",
-        slug: "joosh-borosh",
+        name: "ابزار های جوش و برش",
+        slug: "joosh-va-boresh",
         children: [
             { name: "دستگاه جوش", slug: "welding-machine" },
             { name: "الکترود جوشکاری", slug: "welding-electrode" },
@@ -152,7 +152,7 @@ const categories = [
         ]
     },
     {
-        name: "تراشکاری",
+        name: "ابزار های تراشکاری",
         slug: "tarashkari",
         children: [
             { name: "دستگاه تراش", slug: "lathe-machine" },
@@ -175,7 +175,7 @@ const categories = [
         ]
     },
     {
-        name: "ایمنی",
+        name: "تجهیزات ایمنی",
         slug: "imeni",
         children: [
             { name: "جعبه کمک های اولیه", slug: "first-aid-kit" },
@@ -190,7 +190,7 @@ const categories = [
         ]
     },
     {
-        name: "جرثقیل-لیفتینگ",
+        name: "جرثقیل و ابزار لیفتینگ",
         slug: "jeraghil-lifting",
         children: [
             { name: "اسلب گیر", slug: "slab-grip" },
@@ -200,6 +200,11 @@ const categories = [
             { name: "ریل جرثقیل", slug: "crane-rail" },
             { name: "لیفت مگنت", slug: "lift-magnet" },
         ]
+    },
+    {
+        name: "لوازم جانبی ابزارآلات",
+        slug: "lavazem-janebi",
+        children: []
     },
     {
         name: "جدید",
