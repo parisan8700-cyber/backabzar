@@ -10,8 +10,9 @@ const productSchema = new mongoose.Schema({
   feature: { type: Array, required: false },
   categories: [
     {
-      main: { type: String, required: true },  // دسته اصلی
-      sub: { type: String }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true
     }
   ],
   brand: String,

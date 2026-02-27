@@ -34,9 +34,8 @@ exports.getProductsByCategory = async (req, res) => {
     const products = await productService.getProductsByCategory(main, sub);
     res.json(products);
   } catch (error) {
-    res.status(500).json({
-      message: "خطا در دریافت محصولات بر اساس دسته‌بندی"
-    });
+    console.error(error);
+    res.status(500).json({ message: "خطا در دریافت محصولات بر اساس دسته‌بندی" });
   }
 };
 

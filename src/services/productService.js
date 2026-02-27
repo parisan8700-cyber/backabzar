@@ -1,3 +1,4 @@
+const Category = require("../models/Category");
 const Product = require("../models/Product");
 const slugify = require("slugify");
 
@@ -18,23 +19,23 @@ exports.getProductById = async (id) => {
 //     return products;
 // };
 
-exports.getProductsByCategory = async (main, sub) => {
+exports.getProductsByCategory = async (mainSlug, subSlug) => {
+    const mainCategory = await Category.findOne({ slug: mainSlug });
+    if (!mainCategory) return [];
 
-    let query = {};
+    let categoryIds = [mainCategory._id];
 
-    if (main && sub) {
-        query = {
-            categories: {
-                $elemMatch: { main, sub }
-            }
-        };
-    } else if (main) {
-        query = {
-            "categories.main": main
-        };
+    if (subSlug) {
+        const subCategory = await Category.findOne({ slug: subSlug, parent: mainCategory._id });
+        if (!subCategory) return [];
+        categoryIds = [subCategory._id];
+    } else {
+        const subCategories = await Category.find({ parent: mainCategory._id });
+        categoryIds = categoryIds.concat(subCategories.map(c => c._id));
     }
 
-    const products = await Product.find(query);
+    const products = await Product.find({ categories: { $in: categoryIds } }).populate("categories");
+
     return products;
 };
 
