@@ -8,18 +8,27 @@ async function getCategoryTree() {
     const categories = await Category.find().lean();
     const map = {};
 
-    // دسته‌های اصلی
+    
     categories.forEach(cat => {
         if (!cat.parent) {
-            map[cat._id] = { name: cat.name, slug: cat.slug, subs: [] };
+            map[cat._id] = {
+                _id: cat._id,
+                name: cat.name,
+                slug: cat.slug,
+                subs: []
+            };
         }
     });
 
-    // زیر دسته‌ها
+    
     categories.forEach(cat => {
         if (cat.parent) {
             if (map[cat.parent]) {
-                map[cat.parent].subs.push({ name: cat.name, slug: cat.slug });
+                map[cat.parent].subs.push({
+                    _id: cat._id,
+                    name: cat.name,
+                    slug: cat.slug
+                });
             }
         }
     });
