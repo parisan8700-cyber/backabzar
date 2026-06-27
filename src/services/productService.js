@@ -20,7 +20,11 @@ exports.getAllProducts = async (query) => {
 
 
 exports.getProductById = async (id) => {
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate({
+        path: "categories",
+        select: "_id name slug parent",
+    });
+
     return product;
 };
 
