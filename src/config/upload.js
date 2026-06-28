@@ -4,7 +4,7 @@ const path = require("path");
 // محل ذخیره فایل‌ها
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "src/uploads/products");
+        cb(null, "uploads/products");
     },
 
     filename: (req, file, cb) => {
