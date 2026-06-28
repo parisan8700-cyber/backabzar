@@ -14,6 +14,14 @@ const ordersRouter = require("./src/routes/orderRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
 const uploadRoutes = require("./src/routes/upload");
 
+
+
+const fs = require("fs");
+const path = require("path");
+
+const uploadDir = path.join(__dirname, "uploads", "products");
+
+fs.mkdirSync(uploadDir, { recursive: true });
 // Load Env and DB
 dotenv.config();
 connectDB();
