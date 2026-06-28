@@ -31,6 +31,8 @@ app.use(
   })
 );
 
+app.use("/uploads", express.static("uploads"));
+
 // Default Route
 app.get("/", (req, res) => {
   res.send("Backend is Running!");
