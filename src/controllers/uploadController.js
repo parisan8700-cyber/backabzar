@@ -24,9 +24,11 @@ exports.uploadImage = (req, res) => {
             });
         }
 
+        const baseUrl = process.env.BACKEND_URL;
+
         res.status(200).json({
             message: "عکس با موفقیت آپلود شد",
-            imageUrl: `/uploads/products/${req.file.filename}`,
+            imageUrl: `${baseUrl}/uploads/products/${req.file.filename}`,
         });
 
     } catch (err) {
