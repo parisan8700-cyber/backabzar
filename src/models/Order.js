@@ -63,6 +63,17 @@ const orderSchema = new mongoose.Schema(
             default: "pending",
         },
 
+        shippingMethod: {
+            type: String,
+            enum: ["pickup", "post", "express"],
+            default: "post",
+        },
+
+        shippingCost: {
+            type: Number,
+            default: 0,
+        },
+
         // مبلغی که کاربر الان پرداخت کرده
         amount: {
             type: Number,

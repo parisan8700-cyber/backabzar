@@ -11,7 +11,24 @@ exports.createOrder = async (userId, items, orderData) => {
         }
     }
 
-    const order = await Order.create({ ...orderData, userId });
+    let totalAmount = 0;
+
+    for (const item of items) {
+        const product = await Product.findById(item.productId);
+
+        const currentPrice =
+            item.purchaseType === "installment"
+                ? item.price
+                : product.price - (product.discount || 0);
+
+        totalAmount += currentPrice * item.quantity;
+    }
+
+    const order = await Order.create({
+        ...orderData,
+        amount: totalAmount,
+        userId,
+    });
     return order;
 };
 
