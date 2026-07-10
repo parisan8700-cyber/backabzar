@@ -51,8 +51,22 @@ exports.createOrder = async (userId, items, orderData) => {
 };
 
 
-exports.clearCart = async (userId) => {
-    await Cart.findOneAndUpdate({ user: userId }, { $set: { items: [] } });
+exports.clearCart = async (userId, guestId) => {
+
+    if (userId) {
+        return await Cart.findOneAndUpdate(
+            { user: userId },
+            { $set: { items: [] } }
+        );
+    }
+
+    if (guestId) {
+        return await Cart.findOneAndUpdate(
+            { guestId },
+            { $set: { items: [] } }
+        );
+    }
+
 };
 
 
