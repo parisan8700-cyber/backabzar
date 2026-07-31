@@ -1,10 +1,9 @@
 const axios = require("axios");
 
-exports.createZibalPayment = async (amount, description) => {
+exports.createZibalPayment = async (amount, description, orderId) => {
     const isDev = process.env.NODE_ENV !== "production";
-    const callback_url = isDev
-    ? `http://localhost:3000/basket/success?orderId=${orderId}`
-    : `https://abzar-delta.vercel.app/basket/success?orderId=${orderId}`;
+    const callback_url =
+        `${process.env.BACKEND_URL}/basket/success?orderId=${orderId}`;
 
     const params = {
         merchant: process.env.ZIBAL_MERCHANT,
