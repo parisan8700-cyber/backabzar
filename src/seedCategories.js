@@ -13,18 +13,37 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const categories = [
     {
-        name: "ابزار های برقی و شارژی",
-        slug: "barghi-va-sharji",
+        name: "ابزار های شارژی",
+        slug: "sharji",
+        children: [
+            { name: "بکس", slug: "bax-shargji" },
+            { name: "پیچ گوشتی", slug: "pich-goshti" },
+            { name: "دریل", slug: "drill" },
+            { name: "مینی فرز", slug: "mini-farz" },
+            { name: "جت فن", slug: "jetfan" },
+            { name: "اره", slug: "are-shargji" },
+        ]
+    },
+    {
+        name: "ابزار های برقی",
+        slug: "barghi",
         children: [
             { name: "اره", slug: "are" },
-            { name: "بخارشوی", slug: "bokharshoy" },
-            { name: "بکس برقی و شارژی", slug: "bax-barghi" },
+            { name: "پولیش", slug: "polish" },
+            { name: "اتو لوله", slug: "pipe-iron" },
+            { name: "بکس", slug: "bax-barghi" },
             { name: "پمپ باد", slug: "pump-bad" },
-            { name: "پیچ گوشتی برقی وشارژی", slug: "pich-goshti" },
-            { name: "دریل", slug: "drill" },
+            { name: "پمپ آب", slug: "pump-ab" },
+            { name: "پیچ گوشتی برقی", slug: "pich-goshti-barghi" },
+            { name: "دریل", slug: "drill-barghi" },
+            { name: "سشوار", slug: "sshovar" },
+            { name: "تخریب", slug: "takhrib" },
             { name: "فرز", slug: "farz" },
-            { name: "مته", slug: "mote" },
-            { name: "مینی فرز", slug: "mini-farz" },
+            { name: "مینی فرز", slug: "mini-farz-barghi" },
+            { name: "پروفیل بر", slug: "profilbor" },
+            { name: "بلور", slug: "blor" },
+            { name: "پیستوله", slug: "pistole" },
+            { name: "سنگ رو میزی", slug: "sangromizi" },
         ]
     },
     {
@@ -32,7 +51,6 @@ const categories = [
         slug: "abzar-dasti",
         children: [
             { name: "ابزارهای چندکاره", slug: "multi-tool" },
-            { name: "آچار", slug: "achar" },
             { name: "انبر", slug: "anbar" },
             { name: "پتک", slug: "patak" },
             { name: "چکش", slug: "chakosh" },
@@ -40,18 +58,27 @@ const categories = [
             { name: "کیف ابزار", slug: "tool-bag" },
             { name: "متر", slug: "metr" },
             { name: "نردبان", slug: "nardeban" },
+            { name: "آلن", slug: "alen-dasti" },
+            { name: "سیم چین", slug: "simchin" },
+            { name: "متفرقه گاراژی", slug: "motefareg" },
         ]
     },
     {
-        name: "ابزار های تعمیرگاهی",
+        name: "ابزار های گاراژی",
         slug: "tamirgahi",
         children: [
-            { name: "آپارات و پنچر گیری", slug: "aparart" },
-            { name: "ابزار خمکاری", slug: "khomkari" },
-            { name: "ابزار صاقکاری", slug: "saqkari" },
-            { name: "موتور برق", slug: "motor-bargh" },
-            { name: "متعلقات دستی و گاراژی", slug: "garage-tools" },
+            { name: "ابزار صافکاری", slug: "saqkari" },
             { name: "جعبه بکس و ست بکس", slug: "bax-set" },
+            { name: "آچار", slug: "achar" },
+            { name: "جک", slug: "jack" },
+            { name: "آلن", slug: "alen" },
+            { name: "بادپاش", slug: "badpash" },
+            { name: "شیلنگ", slug: "shilang" },
+            { name: "ابزار دستی", slug: "abzardasti" },
+            { name: "بکس", slug: "box" },
+            { name: "کاتر", slug: "kater" },
+            { name: "سنگ رو میزی", slug: "sangromizi-tamir" },
+            { name: "چکش", slug: "chakosh" },
         ]
     },
     {
@@ -59,86 +86,16 @@ const categories = [
         slug: "badi",
         children: [
             { name: "کمپرسور", slug: "compressor" },
-            { name: "پیچ‌بکس", slug: "pich-bax" },
-            { name: "اره", slug: "are-badi" },
-            { name: "بکس", slug: "bax-badi" },
-            { name: "پانچ", slug: "punch" },
-            { name: "مینی فرز", slug: "mini-farz-badi" },
-            { name: "میخکوب", slug: "nailer" },
+            { name: "منگنه کوب", slug: "mangane" },
+            { name: "بکس بادی", slug: "bax-badi" },
+            { name: "میخکوب بادی", slug: "nailer" },
             { name: "دریل", slug: "drill-badi" },
-            { name: "پمپ وکیوم", slug: "vacuum-pump" },
-            { name: "پولیش", slug: "polish" },
             { name: "جغجغه", slug: "ratchet" },
+            { name: "بادپاش", slug: "badpash-badi" },
+            { name: "شیلنگ", slug: "shilang-badi" },
+            { name: "چکش", slug: "chakosh-badi" },
         ]
     },
-    {
-        name: " ابزار های آبرسانی",
-        slug: "abresani",
-        children: [
-            { name: "لوله و اتصالات", slug: "pipes" },
-            { name: "پمپ آب", slug: "water-pump" },
-            { name: "اتو لوله", slug: "pipe-iron" },
-            { name: "پیستوله", slug: "pistool" },
-            { name: "متعلقات تاسیسات", slug: "plumbing-tools" },
-        ]
-    },
-    {
-        name: "ابزار های اندازه گیری",
-        slug: "andaze-giri",
-        children: [
-            { name: "بادسنج", slug: "anemometer" },
-            { name: "بروسکوپ", slug: "borescope" },
-            { name: "پایه میکرومتر", slug: "micrometer-stand" },
-            { name: "پرگار صنعتی", slug: "compass" },
-            { name: "تاکومتر (دورسنج)", slug: "tachometer" },
-            { name: "تراز صنعتی", slug: "level" },
-            { name: "تراز لیزری", slug: "laser-level" },
-            { name: "ترازو دیجیتال", slug: "digital-scale" },
-            { name: "ترمومتر", slug: "thermometer" },
-            { name: "چرخ متر", slug: "measuring-wheel" },
-            { name: "خط کش", slug: "ruler" },
-            { name: "شمارش گر دیجیتال", slug: "counter" },
-            { name: "کولیس", slug: "caliper" },
-            { name: "نیروسنج", slug: "dynamometer" },
-        ]
-    },
-    {
-        name: "ابزار های کشاورزی",
-        slug: "keshavarzi",
-        children: [
-            { name: "آبپاش", slug: "sprinkler" },
-            { name: "پمپ سمپاش", slug: "sprayer-pump" },
-            { name: "تبر", slug: "axe" },
-            { name: "چاقو باغبانی", slug: "garden-knife" },
-            { name: "چمن زن", slug: "lawn-mower" },
-            { name: "شلنگ", slug: "hose" },
-            { name: "شمشاد زن", slug: "hedge-trimmer" },
-        ]
-    },
-    {
-        name: "قفل و یراق آلات",
-        slug: "ghofl-va-yaragh",
-        children: [
-            { name: "جک آرام بند", slug: "jack-aramband" },
-            { name: "دستگیره", slug: "dastgire" },
-            { name: "ریل درب کشویی", slug: "rail-door" },
-            { name: "سیلندر قفل", slug: "cylinder-lock" },
-            { name: "قفل آویز", slug: "padlock" },
-            { name: "قفل درب", slug: "door-lock" },
-            { name: "قفل کتابی", slug: "book-lock" },
-            { name: "لولا", slug: "hinge" },
-            { name: "قرقره درب لیلی", slug: "pulley" },
-        ]
-    },
-    // {
-    //     name: "رنگ",
-    //     slug: "rang",
-    //     children: [
-    //         { name: "اسپری رنگ", slug: "spray-paint" },
-    //         { name: "پاک کننده نانو", slug: "nano-cleaner" },
-    //         { name: "کاردک و لیسه", slug: "scraper" },
-    //     ]
-    // },
     {
         name: "ابزار های جوش و برش",
         slug: "joosh-va-boresh",
@@ -152,18 +109,6 @@ const categories = [
         ]
     },
     {
-        name: "ابزار های تراشکاری",
-        slug: "tarashkari",
-        children: [
-            { name: "دستگاه تراش", slug: "lathe-machine" },
-            { name: "شنک", slug: "shank" },
-            { name: "فرز فرم", slug: "form-mill" },
-            { name: "فشنگی", slug: "feshangi" },
-            { name: "قلاویز", slug: "tap-die" },
-            { name: "متعلقات ابزار تراش", slug: "lathe-tools" },
-        ]
-    },
-    {
         name: "صفحه سنگ فرز",
         slug: "safhe-sang-farz",
         children: [
@@ -172,21 +117,6 @@ const categories = [
             { name: "سنگ سنباده", slug: "grinding-stone" },
             { name: "صفحه سنگ فرز", slug: "grinding-wheel" },
             { name: "فرچه سیمی", slug: "wire-brush" },
-        ]
-    },
-    {
-        name: "تجهیزات ایمنی",
-        slug: "imeni",
-        children: [
-            { name: "جعبه کمک های اولیه", slug: "first-aid-kit" },
-            { name: "چراغ پیشانی", slug: "headlamp" },
-            { name: "چراغ قوه", slug: "flashlight" },
-            { name: "دستکش کار", slug: "work-gloves" },
-            { name: "شیلد صورت", slug: "face-shield" },
-            { name: "عینک ایمنی", slug: "safety-glasses" },
-            { name: "کلاه ایمنی", slug: "safety-helmet" },
-            { name: "ماسک تنفسی", slug: "respirator" },
-            { name: "ماسک جوشکاری", slug: "welding-mask" },
         ]
     },
     {
@@ -202,8 +132,30 @@ const categories = [
         ]
     },
     {
-        name: "لوازم جانبی ابزارآلات",
-        slug: "lavazem-janebi",
+        name: "جک",
+        slug: "jacks",
+        children: [
+            { name: "جک روغنی", slug: "hydraulic-jack" },
+            { name: "جک سوسماری", slug: "trolley-jack" },
+            { name: "جک بادی", slug: "air-jack" },
+            { name: "جک گیربکسی", slug: "transmission-jack" },
+            { name: "جک موتور", slug: "motor-jack" },
+            { name: "جک صافکاری", slug: "body-repair-jack" },
+
+        ]
+    },
+    {
+        name: "اندازه گیری",
+        slug: "andazegiri",
+        children: [
+            { name: "تراز لیزر", slug: "layzer" },
+            { name: "متر لیزر", slug: "layzer-metr" },
+
+        ]
+    },
+    {
+        name: "کارواش",
+        slug: "karvash",
         children: []
     },
     {
@@ -223,31 +175,59 @@ const categories = [
     }
 ];
 
-async function seedCategoryTree(categoryArray, parent = null) {
+async function seedCategoryTree(categoryArray, parent = null, validSlugs = new Set()) {
     for (const cat of categoryArray) {
-        const { name, slug, children } = cat;
+        const { name, slug, children = [] } = cat;
 
-        const newCategory = new Category({
-            name,
-            slug,
-            parent,
-        });
-        const saved = await newCategory.save();
+        validSlugs.add(slug);
 
-        if (children && children.length > 0) {
-            await seedCategoryTree(children, saved._id);
+        const category = await Category.findOneAndUpdate(
+            { slug },
+            {
+                name,
+                slug,
+                parent,
+            },
+            {
+                new: true,
+                upsert: true,
+                setDefaultsOnInsert: true,
+            }
+        );
+
+        console.log(`✅ همگام شد: ${name}`);
+
+        if (children.length) {
+            await seedCategoryTree(children, category._id, validSlugs);
         }
     }
+
+    return validSlugs;
 }
 
 async function seed() {
     try {
-        await Category.deleteMany(); // پاک کردن قبلی‌ها فقط یک بار
-        await seedCategoryTree(categories);
-        console.log("✅ All categories and subcategories seeded!");
-        process.exit();
+        await mongoose.connect(process.env.MONGO_URI);
+
+        console.log("✅ MongoDB connected");
+
+        const validSlugs = await seedCategoryTree(categories);
+
+        // حذف دسته‌هایی که دیگر داخل فایل وجود ندارند
+        const result = await Category.deleteMany({
+            slug: { $nin: [...validSlugs] },
+        });
+
+        console.log(`🗑️ ${result.deletedCount} دسته حذف شد`);
+
+        console.log("✅ Category seed completed successfully");
+
+        await mongoose.disconnect();
+        process.exit(0);
     } catch (err) {
         console.error("❌ Seed error:", err);
+
+        await mongoose.disconnect();
         process.exit(1);
     }
 }
