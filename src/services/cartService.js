@@ -63,7 +63,7 @@ exports.addInstallmentItem = async ({ userId, guestId, productId, quantity }) =>
     const stock = product.stock;
     if (quantity <= 0 && !userId && !guestId) throw new Error("مقدار محصول باید بیشتر از صفر باشد");
 
-    const prepaymentAmount = 200000; // مبلغ پیش‌پرداخت ثابت
+    const prepaymentAmount = 0; // مبلغ پیش‌پرداخت ثابت
 
     const query = userId ? { user: userId } : { guestId };
     let cart = await Cart.findOne(query);
@@ -81,13 +81,19 @@ exports.addInstallmentItem = async ({ userId, guestId, productId, quantity }) =>
 
     if (existingItem) {
         existingItem.quantity += quantity;
+
         if (existingItem.quantity <= 0) {
-            // اگر تعداد به صفر رسید، حذفش کن
             cart.items = cart.items.filter(
-                (item) => item.product.toString() !== productId.toString()
+                (item) =>
+                    !(
+                        item.product.toString() === productId.toString() &&
+                        item.type === "installment"
+                    )
             );
         }
     } else {
+
+        // محصول اقساطی برای اولین بار وارد سبد می‌شود
         if (quantity > 0) {
             cart.items.push({
                 product: productId,

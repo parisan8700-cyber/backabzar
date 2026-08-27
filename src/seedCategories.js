@@ -22,6 +22,10 @@ const categories = [
             { name: "مینی فرز", slug: "mini-farz" },
             { name: "جت فن", slug: "jetfan" },
             { name: "اره", slug: "are-shargji" },
+            { name: "هویه شارژی", slug: "hovie" },
+            { name: "قیچی", slug: "ghaychi" },
+            { name: "چراغ قوه", slug: "cherag" },
+            { name: "بتن کن", slug: "botonkan" },
         ]
     },
     {
@@ -34,7 +38,7 @@ const categories = [
             { name: "بکس", slug: "bax-barghi" },
             { name: "پمپ باد", slug: "pump-bad" },
             { name: "پمپ آب", slug: "pump-ab" },
-            { name: "پیچ گوشتی برقی", slug: "pich-goshti-barghi" },
+            // { name: "پیچ گوشتی برقی", slug: "pich-goshti-barghi" },
             { name: "دریل", slug: "drill-barghi" },
             { name: "سشوار", slug: "sshovar" },
             { name: "تخریب", slug: "takhrib" },
@@ -42,18 +46,25 @@ const categories = [
             { name: "مینی فرز", slug: "mini-farz-barghi" },
             { name: "پروفیل بر", slug: "profilbor" },
             { name: "بلور", slug: "blor" },
-            { name: "پیستوله", slug: "pistole" },
             { name: "سنگ رو میزی", slug: "sangromizi" },
+            { name: "سنباده", slug: "sonbade" },
+            { name: "شیارزن", slug: "shiyarzan" },
+            { name: "پشمه زن", slug: "pashmezan" },
+            { name: "جوش پلاستیک", slug: "josh-barghi" },
+            { name: "کف کش", slug: "kafkesh" },
+            { name: "وینچ", slug: "winch" },
         ]
     },
     {
         name: "ابزار های دستی",
         slug: "abzar-dasti",
         children: [
-            { name: "ابزارهای چندکاره", slug: "multi-tool" },
+            { name: "تبر", slug: "tabar" },
             { name: "انبر", slug: "anbar" },
+            { name: "سیم چین", slug: "simchin" },
+            { name: "دم باریک", slug: "dambaric" },
             { name: "پتک", slug: "patak" },
-            { name: "چکش", slug: "chakosh" },
+            { name: "چکش", slug: "chakosh-dasti" },
             { name: "جعبه ابزار", slug: "tool-box" },
             { name: "کیف ابزار", slug: "tool-bag" },
             { name: "متر", slug: "metr" },
@@ -61,6 +72,13 @@ const categories = [
             { name: "آلن", slug: "alen-dasti" },
             { name: "سیم چین", slug: "simchin" },
             { name: "متفرقه گاراژی", slug: "motefareg" },
+            { name: "قیچی", slug: "ghaychi-dasti" },
+            { name: "بیت", slug: "bit" },
+            { name: "سم پاش", slug: "sampash" },
+            { name: "گیره رومیزی", slug: "gire" },
+            { name: "شلاقی", slug: "shalagi" },
+            { name: "اره", slug: "areDasti" },
+            { name: "کاتر", slug: "katerDasti" },
         ]
     },
     {
@@ -79,6 +97,11 @@ const categories = [
             { name: "کاتر", slug: "kater" },
             { name: "سنگ رو میزی", slug: "sangromizi-tamir" },
             { name: "چکش", slug: "chakosh" },
+            { name: "گیره رومیزی", slug: "gire-romizi" },
+            { name: "دریل بادی", slug: "drail" },
+            { name: "ساکشن", slug: "saction" },
+            { name: "جرثقیل", slug: "jarasaghil" },
+            { name: "متفرقه", slug: "motefarege" },
         ]
     },
     {
@@ -94,6 +117,10 @@ const categories = [
             { name: "بادپاش", slug: "badpash-badi" },
             { name: "شیلنگ", slug: "shilang-badi" },
             { name: "چکش", slug: "chakosh-badi" },
+            { name: "فرز", slug: "farz-badi" },
+            { name: "رطوبت گیر", slug: "rotobatgir" },
+            { name: "پیستوله", slug: "pistole" },
+            { name: "پولیش", slug: "polish-badi" },
         ]
     },
     {
@@ -104,7 +131,10 @@ const categories = [
             { name: "الکترود جوشکاری", slug: "welding-electrode" },
             { name: "اینورتر برش پلاسما", slug: "plasma-cutter" },
             { name: "برش ریلی", slug: "rail-cut" },
-            { name: "تنگستن", slug: "tungsten" },
+            { name: "انبراتصال", slug: "anbretesal" },
+            { name: "انبرجوش", slug: "anbrjush" },
+            { name: "سرپیک", slug: "sarpic" },
+            { name: "مانومتر", slug: "manometr" },
             { name: "متعلغات ابزارها جوش", slug: "welding-tools" },
         ]
     },
@@ -150,7 +180,20 @@ const categories = [
         children: [
             { name: "تراز لیزر", slug: "layzer" },
             { name: "متر لیزر", slug: "layzer-metr" },
-
+            { name: "ترازو", slug: "tarazo" },
+            { name: "مولتی متر", slug: "moltimetr" },
+            { name: "متر", slug: "metr" },
+            { name: "گونیا", slug: "gonia" },
+            { name: "کولیس", slug: "kolis" },
+        ]
+    },
+    {
+        name: "ابزار نجاری",
+        slug: "najari",
+        children: [
+            { name: "فارسی بر", slug: "farsibor" },
+            { name: "لوله گیر", slug: "lolegir" },
+            { name: "گردبر", slug: "gerdbor" },
         ]
     },
     {
