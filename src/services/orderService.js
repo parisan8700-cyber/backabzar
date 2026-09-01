@@ -17,6 +17,8 @@ exports.createOrder = async (userId, items, orderData) => {
                 ? item.price
                 : product.price - (product.discount || 0);
 
+        item.originalPrice = product.price;
+
         totalAmount += currentPrice * item.quantity;
     }
 
@@ -24,7 +26,7 @@ exports.createOrder = async (userId, items, orderData) => {
 
     switch (orderData.shippingMethod) {
         case "pickup":
-            shippingCost = 0;
+            shippingCost = 100000;
             break;
 
         case "post":
@@ -80,4 +82,10 @@ exports.getAllOrders = async () => {
     return await Order.find()
         .populate("userId", "name phone")
         .populate("items.productId", "name price");
+};
+
+
+exports.deleteOrder = async (id) => {
+    const deletedOrder = await Order.findByIdAndDelete(id);
+    return deletedOrder;
 };

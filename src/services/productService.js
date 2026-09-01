@@ -50,7 +50,16 @@ exports.getProductsByCategory = async (mainSlug, subSlug) => {
 };
 
 exports.getProductBySlug = async (slug) => {
-    const product = await Product.findOne({ slug });
+    const product = await Product.findOne({ slug })
+        .populate({
+            path: "categories",
+            select: "_id name slug parent",
+            populate: {
+                path: "parent",
+                select: "_id name slug"
+            }
+        });
+
     return product;
 };
 
@@ -103,8 +112,18 @@ exports.searchProducts = async (q) => {
         throw new Error("عبارت جستجو وارد نشده است");
     }
 
+    const words = q
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
     const products = await Product.find({
-        name: { $regex: q, $options: "i" },
+        $and: words.map((word) => ({
+            name: {
+                $regex: word,
+                $options: "i",
+            },
+        })),
     });
 
     return products;

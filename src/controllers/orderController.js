@@ -46,3 +46,26 @@ exports.getAllOrders = async (req, res) => {
     }
 };
 
+
+exports.deleteOrder = async (req, res) => {
+    try {
+        const deletedOrder = await orderService.deleteOrder(
+            req.params.id
+        );
+
+        if (!deletedOrder) {
+            return res.status(404).json({
+                message: "سفارش پیدا نشد",
+            });
+        }
+
+        res.status(200).json({
+            message: "سفارش با موفقیت حذف شد",
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: "خطا در حذف سفارش",
+            error: err.message,
+        });
+    }
+};

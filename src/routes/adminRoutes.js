@@ -139,7 +139,7 @@ router.get(
         {
           $group: {
             _id: "$items.productId",
-            sold: {
+            totalSold: {
               $sum: "$items.quantity",
             },
           },
@@ -147,7 +147,7 @@ router.get(
 
         {
           $sort: {
-            sold: -1,
+            totalSold: -1,
           },
         },
 
@@ -172,7 +172,7 @@ router.get(
           $project: {
             _id: "$product._id",
             name: "$product.name",
-            sold: 1,
+            totalSold: 1,
             price: "$product.price",
             image: {
               $arrayElemAt: ["$product.images", 0],
@@ -180,6 +180,68 @@ router.get(
           },
         },
       ]);
+
+      console.log(
+        "🔥 TOP PRODUCTS:",
+        JSON.stringify(topProducts, null, 2)
+      );
+
+
+      const allBestSelling = await Order.aggregate([
+        {
+          $match: {
+            status: {
+              $in: ["paid", "shipped", "delivered"],
+            },
+          },
+        },
+
+        {
+          $unwind: "$items",
+        },
+
+        {
+          $group: {
+            _id: "$items.product",
+            totalSold: {
+              $sum: "$items.quantity",
+            },
+          },
+        },
+
+        {
+          $sort: {
+            totalSold: -1,
+          },
+        },
+
+        {
+          $lookup: {
+            from: "products",
+            localField: "_id",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+
+        {
+          $unwind: "$product",
+        },
+
+        {
+          $project: {
+            _id: 0,
+            productId: "$product._id",
+            name: "$product.name",
+            totalSold: 1,
+          },
+        },
+      ]);
+
+      console.log(
+        "🔥 ALL BEST SELLING:",
+        JSON.stringify(allBestSelling, null, 2)
+      );
 
       // --------------------------
       // نمودار فروش 12 ماه اخیر
