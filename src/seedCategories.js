@@ -26,6 +26,7 @@ const categories = [
             { name: "قیچی", slug: "ghaychi" },
             { name: "چراغ قوه", slug: "cherag" },
             { name: "بتن کن", slug: "botonkan" },
+            { name: "قاپک", slug: "gapak" },
         ]
     },
     {
@@ -51,7 +52,7 @@ const categories = [
             { name: "شیارزن", slug: "shiyarzan" },
             { name: "پشمه زن", slug: "pashmezan" },
             { name: "جوش پلاستیک", slug: "josh-barghi" },
-            { name: "کف کش", slug: "kafkesh" },
+            { name: "کفکش", slug: "kafkesh" },
             { name: "وینچ", slug: "winch" },
         ]
     },
@@ -178,7 +179,7 @@ const categories = [
         name: "اندازه گیری",
         slug: "andazegiri",
         children: [
-            { name: "تراز لیزر", slug: "layzer" },
+            { name: "تراز", slug: "taraz" },
             { name: "متر لیزر", slug: "layzer-metr" },
             { name: "ترازو", slug: "tarazo" },
             { name: "مولتی متر", slug: "moltimetr" },
@@ -194,6 +195,17 @@ const categories = [
             { name: "فارسی بر", slug: "farsibor" },
             { name: "لوله گیر", slug: "lolegir" },
             { name: "گردبر", slug: "gerdbor" },
+        ]
+    },
+    {
+        name: "ابزارهای برش و سایش",
+        slug: "boresh",
+        children: [
+            { name: "صفحه سرامیک بر", slug: "seramicbor" },
+            { name: "صفحه پرسلان", slug: "porselan" },
+            { name: "صفحه گرانیت بر", slug: "geranitbor" },
+            { name: "صفحه چوب", slug: "chob" },
+            { name: "صفحه همه کاره", slug: "hamekareh" },
         ]
     },
     {

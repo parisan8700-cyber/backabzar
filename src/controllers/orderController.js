@@ -69,3 +69,31 @@ exports.deleteOrder = async (req, res) => {
         });
     }
 };
+
+
+exports.updateOrderStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+
+        if (!status) {
+            return res.status(400).json({
+                message: "وضعیت سفارش مشخص نشده است",
+            });
+        }
+
+        const order = await orderService.updateOrderStatus(
+            req.params.id,
+            status
+        );
+
+        res.status(200).json({
+            message: "وضعیت سفارش با موفقیت تغییر کرد",
+            order,
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: "خطا در تغییر وضعیت سفارش",
+            error: err.message,
+        });
+    }
+};

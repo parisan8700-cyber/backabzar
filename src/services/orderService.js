@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const MAX_ORDER_VALUE = 100000000;
 
 exports.createOrder = async (userId, items, orderData) => {
     let totalAmount = 0;
@@ -39,6 +40,12 @@ exports.createOrder = async (userId, items, orderData) => {
 
         default:
             throw new Error("روش ارسال نامعتبر است");
+    }
+
+    if (totalAmount > MAX_ORDER_VALUE) {
+        throw new Error(
+            "مجموع ارزش محصولات سفارش نمی‌تواند بیشتر از ۱۰۰ میلیون تومان باشد"
+        );
     }
 
     const order = await Order.create({
@@ -88,4 +95,18 @@ exports.getAllOrders = async () => {
 exports.deleteOrder = async (id) => {
     const deletedOrder = await Order.findByIdAndDelete(id);
     return deletedOrder;
+};
+
+exports.updateOrderStatus = async (id, status) => {
+    const order = await Order.findById(id);
+
+    if (!order) {
+        throw new Error("سفارش پیدا نشد");
+    }
+
+    order.status = status;
+
+    await order.save();
+
+    return order;
 };

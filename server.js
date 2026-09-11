@@ -13,6 +13,7 @@ const verifyRoute = require("./src/routes/verifyRoute");
 const ordersRouter = require("./src/routes/orderRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
 const uploadRoutes = require("./src/routes/upload");
+const deleteExpiredOrders = require("./src/jobs/deleteExpiredOrders");
 
 
 
@@ -25,6 +26,10 @@ fs.mkdirSync(uploadDir, { recursive: true });
 // Load Env and DB
 dotenv.config();
 connectDB();
+
+deleteExpiredOrders();
+
+setInterval(deleteExpiredOrders, 6 * 60 * 60 * 1000);
 
 const app = express();
 
