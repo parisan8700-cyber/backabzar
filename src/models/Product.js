@@ -6,6 +6,11 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   discount: { type: Number, required: false },
   stock: { type: Number, required: true, min: 0 },
+  unit: {
+    type: String,
+    enum: ["عدد", "متر"],
+    default: "عدد",
+  },
   description: { type: String, required: false },
   feature: { type: Array, required: false },
   categories: [

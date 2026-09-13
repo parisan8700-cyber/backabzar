@@ -1,5 +1,43 @@
 const orderService = require("../services/orderService");
 
+// const ORDERING_ENABLED = false;
+
+
+// exports.createOrder = async (req, res) => {
+//     try {
+//         // 🔒 ثبت سفارش موقتاً غیرفعال است
+//         if (!ORDERING_ENABLED) {
+//             return res.status(503).json({
+//                 message: "ثبت سفارش موقتاً بسته است."
+//             });
+//         }
+
+//         // اگر کاربر لاگین کرده
+//         const userId = req.user ? req.user._id : null;
+//         const { items, guestId } = req.body;
+
+//         if (!items || items.length === 0) {
+//             return res.status(400).json({ message: "سبد خرید خالی است" });
+//         }
+
+//         const order = await orderService.createOrder(
+//             userId,
+//             items,
+//             req.body,
+//             guestId
+//         );
+
+//         await orderService.clearCart(userId, guestId);
+
+//         res.status(201).json(order);
+//     } catch (err) {
+//         res.status(500).json({
+//             message: "خطا در ثبت سفارش",
+//             error: err.message
+//         });
+//     }
+// };
+
 exports.createOrder = async (req, res) => {
     try {
         // اگر کاربر لاگین کرده
