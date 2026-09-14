@@ -135,3 +135,46 @@ exports.updateOrderStatus = async (req, res) => {
         });
     }
 };
+
+
+exports.updateOrder = async (req, res) => {
+    try {
+        const { items, shippingMethod } = req.body;
+
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({
+                message: "سفارش باید حداقل یک محصول داشته باشد",
+            });
+        }
+
+        if (!shippingMethod) {
+            return res.status(400).json({
+                message: "روش ارسال مشخص نشده است",
+            });
+        }
+
+        const order = await orderService.updateOrder(
+            req.params.id,
+            items,
+            shippingMethod
+        );
+
+        res.status(200).json({
+            message: "سفارش با موفقیت ویرایش شد",
+            order,
+        });
+    } catch (err) {
+        console.error("Update Order Error:", err);
+
+        if (err.message === "سفارش پیدا نشد") {
+            return res.status(404).json({
+                message: err.message,
+            });
+        }
+
+        res.status(400).json({
+            message: "خطا در ویرایش سفارش",
+            error: err.message,
+        });
+    }
+};
