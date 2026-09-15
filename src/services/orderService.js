@@ -23,22 +23,6 @@ const getShippingCost = (shippingMethod) => {
     }
 };
 
-/**
- * ساختن نقشه تعداد محصولات
- *
- * مثال:
- * [
- *   { productId: "A", quantity: 2 },
- *   { productId: "A", quantity: 1 },
- *   { productId: "B", quantity: 3 }
- * ]
- *
- * تبدیل می‌شود به:
- * {
- *   A: 3,
- *   B: 3
- * }
- */
 const buildProductQuantityMap = (items) => {
     const map = {};
 
@@ -52,12 +36,6 @@ const buildProductQuantityMap = (items) => {
     return map;
 };
 
-/**
- * کم کردن موجودی
- *
- * این تابع به صورت اتمیک موجودی را کم می‌کند.
- * یعنی اگر موجودی کافی نباشد، اصلاً کم نمی‌کند.
- */
 const decreaseStock = async (productId, quantity) => {
     const product = await Product.findOneAndUpdate(
         {
@@ -87,9 +65,7 @@ const decreaseStock = async (productId, quantity) => {
     return product;
 };
 
-/**
- * برگرداندن موجودی
- */
+
 const increaseStock = async (productId, quantity) => {
     if (!quantity || quantity <= 0) {
         return;
@@ -104,15 +80,10 @@ const increaseStock = async (productId, quantity) => {
 };
 
 
-/* =========================================================
-   ثبت سفارش
-========================================================= */
+
 
 exports.createOrder = async (userId, items, orderData) => {
     let totalAmount = 0;
-
-    // برای جلوگیری از مشکل محصولات تکراری
-    const requestedQuantityMap = buildProductQuantityMap(items);
 
     // اطلاعات محصولات برای محاسبه قیمت
     const products = {};
@@ -166,81 +137,18 @@ exports.createOrder = async (userId, items, orderData) => {
         );
     }
 
-    /*
-     * ---------------------------------------------------------
-     * کم کردن موجودی
-     * ---------------------------------------------------------
-     */
+    const order = await Order.create({
+        ...orderData,
+        items,
+        amount: totalAmount + shippingCost,
+        shippingCost,
+        shippingMethod: orderData.shippingMethod,
+        userId,
+    });
 
-    const decreasedStock = [];
-
-    try {
-        for (const [productId, quantity] of Object.entries(
-            requestedQuantityMap
-        )) {
-            await decreaseStock(
-                productId,
-                quantity
-            );
-
-            decreasedStock.push({
-                productId,
-                quantity,
-            });
-        }
-    } catch (error) {
-        /*
-         * اگر کم کردن موجودی یکی از محصولات شکست خورد،
-         * موجودی محصولاتی که قبل از آن کم شده‌اند
-         * دوباره برگردانده می‌شود.
-         */
-        for (const item of decreasedStock) {
-            await increaseStock(
-                item.productId,
-                item.quantity
-            );
-        }
-
-        throw error;
-    }
-
-    /*
-     * ---------------------------------------------------------
-     * ساخت سفارش
-     * ---------------------------------------------------------
-     */
-
-    try {
-        const order = await Order.create({
-            ...orderData,
-            items,
-            amount: totalAmount + shippingCost,
-            shippingCost,
-            shippingMethod: orderData.shippingMethod,
-            userId,
-        });
-
-        return order;
-    } catch (error) {
-        /*
-         * اگر ساخت سفارش به هر دلیلی شکست خورد،
-         * موجودی‌هایی که کم کرده بودیم برگردانده می‌شوند.
-         */
-        for (const item of decreasedStock) {
-            await increaseStock(
-                item.productId,
-                item.quantity
-            );
-        }
-
-        throw error;
-    }
+    return order;
 };
 
-
-/* =========================================================
-   خالی کردن سبد
-========================================================= */
 
 exports.clearCart = async (userId, guestId) => {
     if (userId) {
@@ -259,10 +167,6 @@ exports.clearCart = async (userId, guestId) => {
 };
 
 
-/* =========================================================
-   سفارشات کاربر
-========================================================= */
-
 exports.getUserOrders = async (userId) => {
     return await Order.find({ userId })
         .sort({ createdAt: -1 })
@@ -273,9 +177,6 @@ exports.getUserOrders = async (userId) => {
 };
 
 
-/* =========================================================
-   همه سفارشات
-========================================================= */
 
 exports.getAllOrders = async () => {
     return await Order.find()
@@ -291,9 +192,6 @@ exports.getAllOrders = async () => {
 };
 
 
-/* =========================================================
-   حذف سفارش
-========================================================= */
 
 exports.deleteOrder = async (id) => {
     const deletedOrder =
@@ -303,9 +201,6 @@ exports.deleteOrder = async (id) => {
 };
 
 
-/* =========================================================
-   تغییر وضعیت سفارش
-========================================================= */
 
 exports.updateOrderStatus = async (id, status) => {
     const order = await Order.findById(id);
@@ -322,9 +217,6 @@ exports.updateOrderStatus = async (id, status) => {
 };
 
 
-/* =========================================================
-   ویرایش سفارش توسط ادمین
-========================================================= */
 
 exports.updateOrder = async (
     id,
@@ -347,14 +239,7 @@ exports.updateOrder = async (
         );
     }
 
-    /*
-     * ---------------------------------------------------------
-     * اعتبارسنجی و محاسبه مبلغ سفارش جدید
-     * ---------------------------------------------------------
-     */
-
     let totalAmount = 0;
-
     const updatedItems = [];
 
     for (const item of items) {
@@ -388,13 +273,17 @@ exports.updateOrder = async (
         let currentPrice;
 
         if (purchaseType === "installment") {
+            /*
+             * در سفارش اقساطی قیمت آیتم می‌تواند صفر باشد.
+             * اینجا فقط منفی بودن یا نبودن مقدار را بررسی می‌کنیم.
+             */
             if (
                 item.price === undefined ||
                 item.price === null ||
                 Number(item.price) < 0
             ) {
                 throw new Error(
-                    `مبلغ پیش‌پرداخت برای ${product.name} مشخص نشده است`
+                    `مبلغ محصول اقساطی برای ${product.name} مشخص نشده است`
                 );
             }
 
@@ -431,146 +320,123 @@ exports.updateOrder = async (
     }
 
     /*
-     * ---------------------------------------------------------
-     * محاسبه موجودی قبلی و جدید
-     * ---------------------------------------------------------
+     * فقط سفارش‌هایی که قبلاً موجودی‌شان کم شده،
+     * باید هنگام ویرایش موجودی را تغییر دهند.
+     *
+     * pending:
+     * موجودی هنوز کم نشده → هیچ تغییری نده
+     *
+     * paid / shipped / delivered:
+     * موجودی قبلاً کم شده → اختلاف را اصلاح کن
      */
+    const stockAlreadyDeducted = [
+        "paid",
+        "shipped",
+        "delivered",
+    ].includes(order.status);
 
-    const oldQuantityMap =
-        buildProductQuantityMap(
-            order.items.map((item) => ({
-                productId: item.productId,
-                quantity: item.quantity,
-            }))
-        );
+    let appliedStockChanges = [];
 
-    const newQuantityMap =
-        buildProductQuantityMap(
-            updatedItems
-        );
+    if (stockAlreadyDeducted) {
+        const oldQuantityMap =
+            buildProductQuantityMap(
+                order.items.map((item) => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                }))
+            );
 
-    /*
-     * اینجا دقیقاً مشخص می‌کنیم هر محصول
-     * چقدر باید از موجودی کم یا به موجودی اضافه شود.
-     *
-     * مثال:
-     *
-     * قبلی: 2
-     * جدید: 1
-     *
-     * difference = -1
-     * یعنی یک عدد باید برگردد.
-     *
-     * قبلی: 1
-     * جدید: 3
-     *
-     * difference = +2
-     * یعنی دو عدد باید از موجودی کم شود.
-     */
+        const newQuantityMap =
+            buildProductQuantityMap(
+                updatedItems
+            );
 
-    const stockChanges = {};
+        const stockChanges = {};
 
-    const allProductIds = new Set([
-        ...Object.keys(oldQuantityMap),
-        ...Object.keys(newQuantityMap),
-    ]);
+        const allProductIds = new Set([
+            ...Object.keys(oldQuantityMap),
+            ...Object.keys(newQuantityMap),
+        ]);
 
-    for (const productId of allProductIds) {
-        const oldQuantity =
-            oldQuantityMap[productId] || 0;
+        for (const productId of allProductIds) {
+            const oldQuantity =
+                oldQuantityMap[productId] || 0;
 
-        const newQuantity =
-            newQuantityMap[productId] || 0;
+            const newQuantity =
+                newQuantityMap[productId] || 0;
 
-        const difference =
-            newQuantity - oldQuantity;
+            const difference =
+                newQuantity - oldQuantity;
 
-        if (difference !== 0) {
-            stockChanges[productId] =
-                difference;
-        }
-    }
-
-    /*
-     * ---------------------------------------------------------
-     * اعمال تغییر موجودی
-     * ---------------------------------------------------------
-     */
-
-    const appliedStockChanges = [];
-
-    try {
-        for (const [productId, difference] of Object.entries(
-            stockChanges
-        )) {
-            /*
-             * difference مثبت:
-             * تعداد سفارش بیشتر شده
-             * پس باید از موجودی کم شود.
-             */
-            if (difference > 0) {
-                await decreaseStock(
-                    productId,
-                    difference
-                );
-
-                appliedStockChanges.push({
-                    productId,
-                    difference,
-                });
-            }
-
-            /*
-             * difference منفی:
-             * تعداد سفارش کمتر شده
-             * پس موجودی باید برگردد.
-             */
-            else {
-                const returnedQuantity =
-                    Math.abs(difference);
-
-                await increaseStock(
-                    productId,
-                    returnedQuantity
-                );
-
-                appliedStockChanges.push({
-                    productId,
-                    difference,
-                });
+            if (difference !== 0) {
+                stockChanges[productId] =
+                    difference;
             }
         }
-    } catch (error) {
+
         /*
-         * اگر در وسط تغییر موجودی خطایی رخ داد،
-         * تمام تغییرات قبلی را برعکس می‌کنیم.
+         * اعمال تغییرات موجودی
          */
-        for (
-            const change of [...appliedStockChanges].reverse()
-        ) {
-            if (change.difference > 0) {
-                // قبلاً کم کرده بودیم، پس برمی‌گردانیم
-                await increaseStock(
-                    change.productId,
-                    change.difference
-                );
-            } else {
-                // قبلاً اضافه کرده بودیم، پس دوباره کم می‌کنیم
-                await decreaseStock(
-                    change.productId,
-                    Math.abs(change.difference)
-                );
+        try {
+            for (
+                const [productId, difference]
+                of Object.entries(stockChanges)
+            ) {
+                if (difference > 0) {
+                    // تعداد سفارش بیشتر شده
+                    await decreaseStock(
+                        productId,
+                        difference
+                    );
+
+                    appliedStockChanges.push({
+                        productId,
+                        difference,
+                    });
+                } else {
+                    // تعداد سفارش کمتر شده
+                    const returnedQuantity =
+                        Math.abs(difference);
+
+                    await increaseStock(
+                        productId,
+                        returnedQuantity
+                    );
+
+                    appliedStockChanges.push({
+                        productId,
+                        difference,
+                    });
+                }
             }
+        } catch (error) {
+            /*
+             * اگر یکی از تغییرات موجودی شکست خورد،
+             * تغییرات قبلی را Rollback می‌کنیم.
+             */
+            for (
+                const change of [
+                    ...appliedStockChanges,
+                ].reverse()
+            ) {
+                if (change.difference > 0) {
+                    await increaseStock(
+                        change.productId,
+                        change.difference
+                    );
+                } else {
+                    await decreaseStock(
+                        change.productId,
+                        Math.abs(
+                            change.difference
+                        )
+                    );
+                }
+            }
+
+            throw error;
         }
-
-        throw error;
     }
-
-    /*
-     * ---------------------------------------------------------
-     * مبلغ نهایی سفارش
-     * ---------------------------------------------------------
-     */
 
     const newAmount =
         totalAmount + shippingCost;
@@ -593,12 +459,6 @@ exports.updateOrder = async (
             (order.paidAmount || 0)
         );
 
-    /*
-     * ---------------------------------------------------------
-     * ذخیره سفارش
-     * ---------------------------------------------------------
-     */
-
     try {
         await order.save();
     } catch (error) {
@@ -607,7 +467,9 @@ exports.updateOrder = async (
          * تغییرات موجودی را برمی‌گردانیم.
          */
         for (
-            const change of [...appliedStockChanges].reverse()
+            const change of [
+                ...appliedStockChanges,
+            ].reverse()
         ) {
             if (change.difference > 0) {
                 await increaseStock(
@@ -617,7 +479,9 @@ exports.updateOrder = async (
             } else {
                 await decreaseStock(
                     change.productId,
-                    Math.abs(change.difference)
+                    Math.abs(
+                        change.difference
+                    )
                 );
             }
         }
@@ -625,11 +489,6 @@ exports.updateOrder = async (
         throw error;
     }
 
-    /*
-     * سفارش را دوباره populate می‌کنیم
-     * تا فرانت‌اند productId را به صورت
-     * آبجکت محصول دریافت کند.
-     */
     const updatedOrder =
         await Order.findById(order._id)
             .populate(
