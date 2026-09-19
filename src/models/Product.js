@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, min: 0 },
   unit: {
     type: String,
-    enum: ["عدد", "متر"],
+    enum: ["عدد", "متر","دستگاه","ست","جفت","حلقه","کارتن"],
     default: "عدد",
   },
   description: { type: String, required: false },
