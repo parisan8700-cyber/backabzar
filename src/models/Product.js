@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, min: 0 },
   unit: {
     type: String,
-    enum: ["عدد", "متر","دستگاه","ست","جفت","حلقه","کارتن"],
+    enum: ["عدد", "متر", "دستگاه", "ست", "جفت", "حلقه", "کارتن"],
     default: "عدد",
   },
   description: { type: String, required: false },
@@ -22,6 +22,11 @@ const productSchema = new mongoose.Schema({
   ],
   brand: String,
   images: [String],
+  views: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
   slug: { type: String, unique: true },
 });
 

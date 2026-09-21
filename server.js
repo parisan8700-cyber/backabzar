@@ -6,6 +6,8 @@ const connectDB = require("./src/config/db");
 // Load Routes
 const userRoutes = require("./src/routes/userRoutes");
 const productRoutes = require("./src/routes/productRoutes");
+const productViewRoutes = require("./src/routes/productViewRoutes");
+const productAnalyticsRoutes = require("./src/routes/productAnalyticsRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
@@ -54,6 +56,8 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/product-views", productViewRoutes);
+app.use("/api/admin/product-analytics", productAnalyticsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api", paymentRoutes);
