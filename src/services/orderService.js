@@ -6,7 +6,7 @@ const MAX_ORDER_VALUE = 100000000;
 
 /**
  * محاسبه هزینه ارسال
- */
+*/
 const getShippingCost = (shippingMethod) => {
     switch (shippingMethod) {
         case "pickup":
@@ -172,10 +172,9 @@ exports.getUserOrders = async (userId) => {
         .sort({ createdAt: -1 })
         .populate(
             "items.productId",
-            "name price discount stock"
+            "name price discount stock unit images slug"
         );
 };
-
 
 
 exports.getAllOrders = async () => {

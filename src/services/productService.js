@@ -112,18 +112,55 @@ exports.searchProducts = async (q) => {
         throw new Error("عبارت جستجو وارد نشده است");
     }
 
+    // تبدیل اعداد فارسی و عربی به انگلیسی
+    const normalizeNumbers = (text) => {
+        return text
+            .replace(/[۰-۹]/g, (char) =>
+                String(char.charCodeAt(0) - 1776)
+            )
+            .replace(/[٠-٩]/g, (char) =>
+                String(char.charCodeAt(0) - 1632)
+            );
+    };
+
     const words = q
         .trim()
         .split(/\s+/)
         .filter(Boolean);
 
     const products = await Product.find({
-        $and: words.map((word) => ({
-            name: {
-                $regex: word,
-                $options: "i",
-            },
-        })),
+        $and: words.map((word) => {
+            const normalizedWord = normalizeNumbers(word);
+
+            // اگر کلمه عدد داشته باشد،
+            // معادل فارسی، عربی و انگلیسی آن را هم قبول می‌کنیم.
+            const regexPattern = normalizedWord
+                .split("")
+                .map((char) => {
+                    if (/[0-9]/.test(char)) {
+                        const number = Number(char);
+
+                        const persian = "۰۱۲۳۴۵۶۷۸۹"[number];
+                        const arabic = "٠١٢٣٤٥٦٧٨٩"[number];
+
+                        return `[${char}${persian}${arabic}]`;
+                    }
+
+                    // جلوگیری از مشکل کاراکترهای خاص Regex
+                    return char.replace(
+                        /[.*+?^${}()|[\]\\]/g,
+                        "\\$&"
+                    );
+                })
+                .join("");
+
+            return {
+                name: {
+                    $regex: regexPattern,
+                    $options: "i",
+                },
+            };
+        }),
     });
 
     return products;

@@ -27,6 +27,7 @@ const productSchema = new mongoose.Schema({
     default: 0,
     min: 0,
   },
+  
   slug: { type: String, unique: true },
 });
 

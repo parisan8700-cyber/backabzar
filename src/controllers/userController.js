@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const userService = require("../services/userService");
+
 
 exports.registerUser = async (req, res) => {
   const { name, password, phone } = req.body;
@@ -22,7 +24,7 @@ exports.registerUser = async (req, res) => {
       name,
       password: hashedPassword,
       phone,
-      role, 
+      role,
     });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -47,20 +49,40 @@ exports.loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ phone });
+
     if (!user) {
       return res
         .status(400)
-        .json({ message: "کاربری با این شماره تلفن پیدا نشد" });
+        .json({
+          message:
+            "کاربری با این شماره تلفن پیدا نشد",
+        });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
     if (!isMatch) {
-      return res.status(400).json({ message: "رمز عبور اشتباه است" });
+      return res
+        .status(400)
+        .json({
+          message: "رمز عبور اشتباه است",
+        });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
+    // ثبت آخرین ورود موفق
+    user.lastLoginAt = new Date();
+    await user.save();
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "30d",
+      }
+    );
 
     res.status(200).json({
       _id: user._id,
@@ -70,7 +92,9 @@ exports.loginUser = async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -150,4 +174,22 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "خطا در حذف کاربر" });
   }
 };
+exports.getUserDetails = async (req, res) => {
+  try {
+    const data = await userService.getUserDetails(req.params.id);
 
+    res.status(200).json(data);
+  } catch (error) {
+    if (error.message === "کاربر یافت نشد") {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    console.error("GET USER DETAILS ERROR:", error);
+
+    res.status(500).json({
+      message: "خطا در دریافت جزئیات کاربر",
+    });
+  }
+};
